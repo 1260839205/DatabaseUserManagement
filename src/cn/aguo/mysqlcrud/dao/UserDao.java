@@ -58,6 +58,8 @@ public interface UserDao {
      */
     public int count();
 
+
+
     /**
      * 
      * @param dataone
@@ -70,4 +72,6 @@ public interface UserDao {
     public List<User> complexInquire(String dataone , String datatwo);
 
     public List<User> complexInquire(String dataone);
+
+    public List<User> findUserByPage(int currentPage, int row);
 }

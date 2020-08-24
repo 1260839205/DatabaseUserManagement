@@ -95,4 +95,27 @@ public class UserDaoImpl implements UserDao {
         return user.getCount();
 
     }
+
+    @Override
+    public List<User> complexInquire(String dataone, String datatwo, String three) {
+        return null;
+    }
+
+    @Override
+    public List<User> complexInquire(String dataone, String datatwo) {
+        return null;
+    }
+
+    @Override
+    public List<User> complexInquire(String dataone) {
+        return null;
+    }
+
+    @Override
+    public List<User> findUserByPage(int currentPage, int row) {
+        String sql = "select * from userinfo limit ? , ?";
+
+
+        return template.query(sql,new BeanPropertyRowMapper<User>(User.class),(currentPage - 1) * row ,row);
+    }
 }

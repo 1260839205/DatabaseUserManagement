@@ -109,7 +109,7 @@
             <th>邮箱</th>
             <th>操作</th>
         </tr>
-        <c:forEach items="${requestScope.users}" var="user" varStatus="s">
+        <c:forEach items="${requestScope.users.listusers}" var="user" varStatus="s">
         <tr>
             <td><input type="checkbox" name="uid" value="${user.id}"></td>
             <td>${user.id}</td>
@@ -127,28 +127,43 @@
     </form>
     <nav aria-label="...">
         <ul class="pagination">
-            <li class="disabled">
+            <c:if test="${requestScope.users.currentPageNumber == 1 }">
+                <li class="disabled">
+            </c:if>
+            <c:if test="${requestScope.users.currentPageNumber != 1 }">
+                <li>
+            </c:if>
+     <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${requestScope.users.currentPageNumber - 1}&rows=5">
       <span>
-        <span aria-hidden="true">&laquo;</span>
+              <span aria-hidden="true">&laquo;</span>
       </span>
+     </a>
             </li>
-            <li class="active">
-                <span>1 <span class="sr-only">(current)</span></span>
-            </li>
-            <li class="">
-                <span>2 <span class="sr-only">(current)</span></span>
-            </li>
-            <li class="">
-                <span>3 <span class="sr-only">(current)</span></span>
-            </li>
-            <li>
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+            <c:forEach begin="1" end="${requestScope.users.totalPageNumber}" var="i" step="1">
+                <c:if test="${requestScope.users.currentPageNumber == i}">
+                <li class="active">
+                    <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${i}&rows=5">${i} <span class="sr-only">(current)</span></a>
+                </li>
+                </c:if>
+                <c:if test="${requestScope.users.currentPageNumber != i}">
+                    <li>
+                        <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${i}&rows=5">${i} <span class="sr-only">(current)</span></a>
+                    </li>
+                </c:if>
+            </c:forEach>
+            <c:if test="${requestScope.users.totalPageNumber == i}">
+                <li class="disabled">
+            </c:if>
+            <c:if test="${requestScope.users.totalPageNumber != i}">
+                <li>
+            </c:if>
+                    <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${requestScope.users.currentPageNumber + 1}&rows=5" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
             <span style="font-size: 25px;">
                 <strong style="margin-left: 15px">
-                    共${requestScope.count}条数据，共3页
+                    共${requestScope.users.totalCount}条数据，共${requestScope.users.totalPageNumber}页
                 </strong>
             </span>
         </ul>

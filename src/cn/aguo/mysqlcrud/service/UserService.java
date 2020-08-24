@@ -1,6 +1,7 @@
 package cn.aguo.mysqlcrud.service;
 
 import cn.aguo.mysqlcrud.domain.LoginUser;
+import cn.aguo.mysqlcrud.domain.PageBean;
 import cn.aguo.mysqlcrud.domain.User;
 
 import java.util.List;
@@ -58,9 +59,12 @@ public interface UserService {
      */
     public void deleteUsers(String[] ids);
 
+
     /**
-     * 查询用户数据条数
+     * 分页查找用户
      * @return
+     * @param currentPageNumber
+     * @param rows
      */
-    public int count();
+    public PageBean<User> findUserByPage(String currentPageNumber, String rows);
 }

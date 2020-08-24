@@ -3,6 +3,7 @@ package cn.aguo.mysqlcrud.service.impl;
 import cn.aguo.mysqlcrud.dao.UserDao;
 import cn.aguo.mysqlcrud.dao.impl.UserDaoImpl;
 import cn.aguo.mysqlcrud.domain.LoginUser;
+import cn.aguo.mysqlcrud.domain.PageBean;
 import cn.aguo.mysqlcrud.service.UserService;
 import cn.aguo.mysqlcrud.domain.User;
 
@@ -54,8 +55,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int count() {
-        return dao.count();
+    public PageBean<User> findUserByPage(String currentPageNumber, String rows) {
+
+        //获取当前页码和每页显示条数
+        int currentPage = Integer.parseInt(currentPageNumber);
+        int row = Integer.parseInt(rows);
+
+        //创建PageBean对象
+        PageBean<User> pb = new PageBean<User>();
+
+        //存入数据
+        pb.setCurrentPageNumber(currentPage);
+        pb.setRows(row);
+        int count = dao.count();
+        pb.setTotalCount(count);
+        pb.setTotalPageNumber((count % row )== 0 ? count / row : (count / row) + 1);
+        pb.setListusers(dao.findUserByPage(currentPage,row));
+
+        return pb;
     }
 
 

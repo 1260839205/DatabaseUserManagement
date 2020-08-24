@@ -1,5 +1,6 @@
 package cn.aguo.mysqlcrud.web.servlet;
 
+import cn.aguo.mysqlcrud.domain.PageBean;
 import cn.aguo.mysqlcrud.domain.User;
 import cn.aguo.mysqlcrud.service.UserService;
 import cn.aguo.mysqlcrud.service.impl.UserServiceImpl;
@@ -20,17 +21,27 @@ import java.util.List;
 @WebServlet("/userListServlet")
 public class UserListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //设置获取数据的编码
+        request.setCharacterEncoding("utf-8");
+
+        //获取页面显示条数，以及页码
+        String currentPageNumber = request.getParameter("currentPageNumber");
+        String rows = request.getParameter("rows");
+
+        //设置未传参的默认值
+        if (currentPageNumber == null || "".equals(currentPageNumber)){
+            currentPageNumber = "1";
+        }
+        if (rows == null || "".equals(rows)){
+            rows = "5";
+        }
+
         //1.调用UserService查询所有用户
         UserService service = new UserServiceImpl();
-        List<User> users = service.findAll();
-
-        //查询用户数量
-        int count = service.count();
-
+        PageBean<User> users = service.findUserByPage(currentPageNumber,rows);
 
         //2.将数据存到request域中
         request.setAttribute("users",users);
-        request.setAttribute("count",count);
 
         //3.转发到list.jsp
         request.getRequestDispatcher("/list.jsp").forward(request,response);
