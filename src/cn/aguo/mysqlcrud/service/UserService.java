@@ -5,6 +5,7 @@ import cn.aguo.mysqlcrud.domain.PageBean;
 import cn.aguo.mysqlcrud.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 石成果
@@ -65,6 +66,7 @@ public interface UserService {
      * @return
      * @param currentPageNumber
      * @param rows
+     * @param parame
      */
-    public PageBean<User> findUserByPage(String currentPageNumber, String rows);
+    public PageBean<User> findUserByPage(String currentPageNumber, String rows, Map<String, String[]> parame);
 }

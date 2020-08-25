@@ -8,7 +8,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author 石成果
@@ -87,10 +90,28 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int count() {
-        String sql = "select count(id) count from userinfo";
+    public int count(Map<String, String[]> parame) {
+        String sql = "select count(*) count from userinfo where 1 = 1 ";
+        StringBuilder sb = new StringBuilder(sql);
+        List<Object> list = new ArrayList<Object>();
 
-        User user = template.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class));
+        Set<String> keys = parame.keySet();
+        for (String key : keys) {
+            if ("currentPageNumber".equals(key) || "rows".equals(key)){
+                continue;
+            }
+            String value = parame.get(key)[0];
+            if (value != null && !"".equals(value)){
+                sb.append(" and "+key+" like ? ");
+                list.add("%"+value+"%");
+            }
+        }
+
+        sql = sb.toString();
+        System.out.println(sql);
+        System.out.println(list);
+
+        User user = template.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class), list.toArray());
 
         return user.getCount();
 
@@ -112,10 +133,32 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findUserByPage(int currentPage, int row) {
-        String sql = "select * from userinfo limit ? , ?";
+    public List<User> findUserByPage(int currentPage, int row, Map<String, String[]> parame) {
+        try {
+            String sql = "select * from userinfo where 1 = 1 ";
+            StringBuilder sb = new StringBuilder(sql);
+            List<Object> list = new ArrayList<Object>();
 
+            Set<String> keys = parame.keySet();
+            for (String key : keys) {
+                if ("currentPageNumber".equals(key) || "rows".equals(key)){
+                    continue;
+                }
+                String value = parame.get(key)[0];
+                if (value != null && !"".equals(value)){
+                    sb.append(" and "+key+" like ? ");
+                    list.add("%"+value+"%");
+                }
+            }
+            sb.append(" limit ?,? ");
+            sql = sb.toString();
+            list.add((currentPage - 1) * row);
+            list.add(row);
 
-        return template.query(sql,new BeanPropertyRowMapper<User>(User.class),(currentPage - 1) * row ,row);
+            return template.query(sql,new BeanPropertyRowMapper<User>(User.class),list.toArray());
+        }catch (Exception e){
+            return null;
+        }
+
     }
 }

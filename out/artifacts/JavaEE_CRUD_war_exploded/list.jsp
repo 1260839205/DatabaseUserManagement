@@ -76,18 +76,18 @@
 <div class="container">
     <h3 style="text-align: center">用户信息列表</h3>
     <div style="float: left; margin-bottom: 10px">
-        <form class="form-inline" action="${pageContext.request.contextPath}/complexServlet" method="get">
+        <form class="form-inline" action="${pageContext.request.contextPath}/userListServlet" method="get">
             <div class="form-group">
                 <label for="name">姓名</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="输入需要查询的姓名">
+                <input type="text" class="form-control" id="name" value="${requestScope.parame.name[0]}" name="name" placeholder="输入需要查询的姓名">
             </div>
             <div class="form-group">
                 <label for="hometown">籍贯</label>
-                <input type="email" class="form-control" id="hometown" name="hometown" placeholder="输入需要查询的籍贯">
+                <input type="email" class="form-control" id="hometown" ${requestScope.parame.hometown[0]} name="hometown" placeholder="输入需要查询的籍贯">
             </div>
             <div class="form-group">
                 <label for="email">邮箱</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="输入需要查询的邮箱">
+                <input type="email" class="form-control" id="email" ${requestScope.parame.email[0]} name="email" placeholder="输入需要查询的邮箱">
             </div>
             <button type="submit" class="btn btn-default" id="inquire">查询</button>
         </form>
@@ -133,7 +133,7 @@
             <c:if test="${requestScope.users.currentPageNumber != 1 }">
                 <li>
             </c:if>
-     <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${requestScope.users.currentPageNumber - 1}&rows=5">
+     <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${requestScope.users.currentPageNumber - 1}&rows=5&name=${requestScope.parame.name[0]}&hometown=${requestScope.parame.hometown[0]}&email=${requestScope.parame.email[0]}">
       <span>
               <span aria-hidden="true">&laquo;</span>
       </span>
@@ -142,22 +142,22 @@
             <c:forEach begin="1" end="${requestScope.users.totalPageNumber}" var="i" step="1">
                 <c:if test="${requestScope.users.currentPageNumber == i}">
                 <li class="active">
-                    <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${i}&rows=5">${i} <span class="sr-only">(current)</span></a>
+                    <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${i}&rows=5&name=${requestScope.parame.name[0]}&hometown=${requestScope.parame.hometown[0]}&email=${requestScope.parame.email[0]}">${i} <span class="sr-only">(current)</span></a>
                 </li>
                 </c:if>
                 <c:if test="${requestScope.users.currentPageNumber != i}">
                     <li>
-                        <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${i}&rows=5">${i} <span class="sr-only">(current)</span></a>
+                        <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${i}&rows=5&name=${requestScope.parame.name[0]}&hometown=${requestScope.parame.hometown[0]}&email=${requestScope.parame.email[0]}">${i} <span class="sr-only">(current)</span></a>
                     </li>
                 </c:if>
             </c:forEach>
-            <c:if test="${requestScope.users.totalPageNumber == i}">
+            <c:if test="${requestScope.users.totalPageNumber == requestScope.users.currentPageNumber}">
                 <li class="disabled">
             </c:if>
-            <c:if test="${requestScope.users.totalPageNumber != i}">
+            <c:if test="${requestScope.users.totalPageNumber != requestScope.users.currentPageNumber}">
                 <li>
             </c:if>
-                    <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${requestScope.users.currentPageNumber + 1}&rows=5" aria-label="Next">
+                    <a href="${pageContext.request.contextPath}/userListServlet?currentPageNumber=${requestScope.users.currentPageNumber >= requestScope.users.totalPageNumber ? requestScope.users.totalPageNumber : requestScope.users.currentPageNumber + 1}&rows=5&name=${requestScope.parame.name[0]}&hometown=${requestScope.parame.hometown[0]}&email=${requestScope.parame.email[0]}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

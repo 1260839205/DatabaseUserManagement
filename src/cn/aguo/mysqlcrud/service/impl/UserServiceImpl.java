@@ -8,6 +8,7 @@ import cn.aguo.mysqlcrud.service.UserService;
 import cn.aguo.mysqlcrud.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 石成果
@@ -55,11 +56,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageBean<User> findUserByPage(String currentPageNumber, String rows) {
+    public PageBean<User> findUserByPage(String currentPageNumber, String rows, Map<String, String[]> parame) {
 
         //获取当前页码和每页显示条数
         int currentPage = Integer.parseInt(currentPageNumber);
         int row = Integer.parseInt(rows);
+        if (currentPage < 1){
+            currentPage = 1;
+        }
+        int count = dao.count(parame);
+        int totalpage = (count % row )== 0 ? count / row : (count / row) + 1;
+        if (currentPage > totalpage){
+            currentPage = totalpage;
+        }
 
         //创建PageBean对象
         PageBean<User> pb = new PageBean<User>();
@@ -67,10 +76,10 @@ public class UserServiceImpl implements UserService {
         //存入数据
         pb.setCurrentPageNumber(currentPage);
         pb.setRows(row);
-        int count = dao.count();
         pb.setTotalCount(count);
-        pb.setTotalPageNumber((count % row )== 0 ? count / row : (count / row) + 1);
-        pb.setListusers(dao.findUserByPage(currentPage,row));
+        pb.setTotalPageNumber(totalpage);
+        pb.setListusers(dao.findUserByPage(currentPage,row,parame));
+        System.out.println(dao.findUserByPage(currentPage,row,parame));
 
         return pb;
     }

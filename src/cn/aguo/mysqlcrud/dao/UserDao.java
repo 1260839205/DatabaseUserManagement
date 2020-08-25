@@ -4,6 +4,7 @@ import cn.aguo.mysqlcrud.domain.LoginUser;
 import cn.aguo.mysqlcrud.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 石成果
@@ -55,8 +56,9 @@ public interface UserDao {
     /**
      * 查询数据库数据条数
      * @return
+     * @param parame
      */
-    public int count();
+    public int count(Map<String, String[]> parame);
 
 
 
@@ -73,5 +75,5 @@ public interface UserDao {
 
     public List<User> complexInquire(String dataone);
 
-    public List<User> findUserByPage(int currentPage, int row);
+    public List<User> findUserByPage(int currentPage, int row, Map<String, String[]> parame);
 }

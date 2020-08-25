@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 石成果
@@ -27,6 +28,7 @@ public class UserListServlet extends HttpServlet {
         //获取页面显示条数，以及页码
         String currentPageNumber = request.getParameter("currentPageNumber");
         String rows = request.getParameter("rows");
+        Map<String, String[]> parame = request.getParameterMap();
 
         //设置未传参的默认值
         if (currentPageNumber == null || "".equals(currentPageNumber)){
@@ -38,9 +40,11 @@ public class UserListServlet extends HttpServlet {
 
         //1.调用UserService查询所有用户
         UserService service = new UserServiceImpl();
-        PageBean<User> users = service.findUserByPage(currentPageNumber,rows);
+        PageBean<User> users = service.findUserByPage(currentPageNumber,rows,parame);
+
 
         //2.将数据存到request域中
+        request.setAttribute("parame",parame);
         request.setAttribute("users",users);
 
         //3.转发到list.jsp
